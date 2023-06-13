@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import {FormHeader, SearchForm, SearchFormButton, FormInput} from './Searchbar.styled';
@@ -28,8 +28,6 @@ if(searchingName.trim() === ""){
 
 return (
 <FormHeader>
-<ToastContainer autoClose={2000}
-/>
   <SearchForm onSubmit={handleSubmit}>
     <SearchFormButton type="submit" >
      Search
