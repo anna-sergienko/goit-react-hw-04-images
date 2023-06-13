@@ -28,20 +28,19 @@ useEffect(()=>{
   if(searchingName === ''){
     return
   };
-
+  
   searchingName && setLoader(true);
   searchingName && fetchPictures(searchingName, page)
   .then(pictures => {
+    showLoadMoreOption(pictures.hits.length, pictures.total, page);
+    if(pictures.total === 0){
+      setShowLoadMore(false);
+      return toast.warn('Sorry, but we do not have results( Try again!');
+    };
     setPictures(prev => {
-      setShowLoadMore(true);
       return [...prev, ...pictures.hits]
-     
     });
-if(pictures.total === 0){
-  setShowLoadMore(false);
-  return toast.warn('Sorry, but we do not have results( Try again!');
 
-}
 })
 .catch(error => {
   setError(error);
@@ -49,6 +48,16 @@ if(pictures.total === 0){
 .finally(
   setLoader(false))
 },[page, searchingName])
+
+
+
+const showLoadMoreOption = (length, total, page) => {
+  const totalPages = Math.floor(total / 12)
+  if (length % 12 === 0 && length !== 0 && page <= totalPages) {
+    return setShowLoadMore(true)
+  }
+  return setShowLoadMore(false)
+}
 
 
 const handleFormSubmit = (searchingName) =>{
@@ -74,10 +83,11 @@ const  onLoadMore = () => {
 
   return(
     <>
+    
   {error && (<div>{error}</div>)}
   <Searchbar onSubmit={handleFormSubmit}/>
   {loader && <Loader/>}
-  <ImageGallery pictures={pictures} openModal={openModal} page={page} setPage={setPage}/>
+  <ImageGallery pictures={pictures} openModal={openModal} />
   {showLoadMore && <Button onClick={onLoadMore} />}
   {showModal && 
   <Modal onClose={toggleModal}>
